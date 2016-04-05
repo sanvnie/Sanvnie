@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="Sanvnie"
+  id="myeclipse.1446194491174"
+  context-root="/Sanvnie"
+  j2ee-spec="5.0"
+  archive="Sanvnie.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanyuan.mapper.DivisionMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 <cache type="org.mybatis.caches.ehcache.LoggingEhcache" 
+		/> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+	<!-- 以下与实体类的中字段一致 -->
+	<sql id="selectId">
+		pid,
+		pname,
+		sid,
+		sname,
+		level,
+		upid,
+		city
+	</sql>
+	
+	<select id="queryDivisionByPid" resultType="com.lanyuan.entity.Division">
+		SELECT pdiv.pid pid, pdiv.pname,pdiv.sname,pdiv.sid,pdiv.city isSpecial,lcd.tel_code,lcd.post_code,lcd.strative_code,lcd.plate,lcd.area FROM (SELECT pld.name pname , sld.`name` sname,pld.id pid,sld.id sid,pld.city from ly_division pld , ly_division sld WHERE pld.id=sld.upid) pdiv
+			LEFT JOIN ly_chinese_division lcd ON pdiv.sid=lcd.pid
+  		where pdiv.pid=${pid} order by pdiv.sid
+	</select>
+	
+	<select id="getDivisionById" resultType="com.lanyuan.entity.ChineseDivision">
+		SELECT lcd.*,ld.`name` ch_name from ly_chinese_division lcd ,ly_division ld WHERE lcd.pid=ld.id AND ld.id=${id}
+	</select>
+	
+	<select id="isSpecialDivision" resultType="com.lanyuan.entity.Division">
+		SELECT pdiv.* FROM (SELECT province.id provinceid,city.id cityid,province.name provincename ,city.name cityname,province.city isSpecial from ly_division province,ly_division city WHERE province.id = city.upid) pdiv 
+		WHERE pdiv.cityid=${id}
+	</select>
+	
+	<select id="getProvinceByCityId" resultType="com.lanyuan.entity.Division">
+		SELECT province.* from ly_division city ,ly_division province WHERE city.upid=province.id AND city.id=${id}
+	</select>
+</mapper>
